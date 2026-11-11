@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Ananya Gupta | Electrical Engineering</title>
-  <meta name="description" content="Portfolio of Ananya Gupta, Electrical Engineering student at Rutgers University. RF design, antennas, PCB design, embedded systems, and robotics." />
+  <meta name="description" content="Portfolio of Ananya Gupta, Electrical Engineering student at Rutgers University. Embedded systems, firmware, circuits, and robotics." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
@@ -31,12 +31,13 @@
 
     <!-- ============ HERO ============ -->
     <section class="hero container">
-      <p class="mono eyebrow">// electrical engineering · rutgers · class of 2028</p>
+      <p class="mono eyebrow">// electrical engineering · rutgers · graduating fall 2028</p>
       <h1>Hi, I'm <span class="accent">Ananya Gupta</span>.</h1>
       <p class="lead">
-        Electrical Engineering student at Rutgers University. I design and build hardware
-        across RF, PCB design, and embedded systems: antennas, guitar preamps, robots, and solar car telemetry.
-        Looking for Summer 2027 internships.
+        Electrical Engineering student at Rutgers University focused on embedded systems: microcontroller
+        firmware, links between boards, and the hardware around them. I've built CAN-bus telemetry for a solar car,
+        a fail-safe wireless E-stop for a delivery robot, and real-time computer vision on a Raspberry Pi Zero.
+        Looking for Summer 2027 embedded systems internships, and open to relocation.
       </p>
       <div class="btn-row">
         <a class="btn primary" href="resume.pdf" target="_blank">Résumé (PDF)</a>
@@ -57,9 +58,9 @@
           <!-- EDIT: make this sound like you. Add a sentence on what got you into EE. -->
           <p>
             I'm an Electrical Engineering student at Rutgers University–New Brunswick (GPA 3.947),
-            most interested in RF and hardware design. I enjoy taking a design from theory to a
-            working prototype. With IEEE, that meant tuning a Yagi antenna for LoRa. Now it means
-            laying out a guitar preamp PCB in KiCad.
+            most interested in embedded systems: writing firmware that drives real hardware and getting
+            boards to talk to each other. I like taking a design from a breadboard to something that runs
+            reliably on its own, and designing it to fail safely when something goes wrong.
           </p>
           <p>
             Outside of class I'm on the Rutgers Solar Car Club, building the Wi-Fi telemetry system,
@@ -72,7 +73,7 @@
             <li><span>Major</span> B.S. Electrical Engineering</li>
             <li><span>GPA</span> 3.947 / 4.00</li>
             <li><span>Grad</span> Fall 2028 (expected)</li>
-            <li><span>Based</span> Santa Clara, CA · New Brunswick, NJ</li>
+            <li><span>Based</span> Santa Clara, CA · New Brunswick, NJ · open to relocation</li>
           </ul>
         </div>
         <!-- PHOTO: images/headshot.jpg (square crop; you at a bench or with a project is ideal) -->
@@ -171,10 +172,11 @@
             <p class="mono card-meta">2026 · Personal project · In progress</p>
             <h3>Guitar Preamplifier PCB</h3>
             <p>
-              Designing a guitar preamplifier PCB in KiCad, from schematic capture through board layout.
+              A battery-powered guitar preamp in KiCad. Targets: 9 V supply, adjustable gain from 0 to
+              +27 dB, and a flat response from about 15 Hz up, built around an OPA134 low-noise audio op-amp.
             </p>
             <ul class="tags">
-              <li>KiCad</li><li>PCB layout</li><li>Analog audio</li>
+              <li>KiCad</li><li>Op-amp design</li><li>PCB layout</li><li>Analog audio</li>
             </ul>
             <div class="card-links mono">
               <a href="projects/guitar-preamp.html">Read more →</a>
@@ -237,41 +239,35 @@
       <h2 class="section-title"><span class="mono accent">03.</span> Skills</h2>
       <div class="skills-grid">
         <div class="skill-group">
-          <h3 class="mono">RF &amp; Wireless</h3>
+          <h3 class="mono">Embedded &amp; Firmware</h3>
           <ul class="tags">
-            <li>Antenna design</li><li>Impedance matching</li><li>LoRa</li><li>ESP-NOW</li><li>Wi-Fi telemetry</li>
+            <li>C/C++ (Arduino)</li><li>ESP32 / ESP32-S3</li><li>Raspberry Pi</li><li>PWM motor control</li>
+            <li>UART</li><li>CAN bus (SLCAN)</li><li>ESP-NOW</li><li>WebSockets</li>
           </ul>
         </div>
         <div class="skill-group">
-          <h3 class="mono">Hardware &amp; Embedded</h3>
+          <h3 class="mono">Circuits &amp; Hardware</h3>
           <ul class="tags">
-            <li>PCB design</li><li>Circuit design &amp; prototyping</li><li>Soldering</li>
-            <li>Arduino</li><li>ESP32</li><li>Raspberry Pi</li><li>Motor drivers &amp; sensors</li>
+            <li>Circuit design &amp; prototyping</li><li>Op-amp circuits</li><li>PCB design (KiCad)</li>
+            <li>Soldering</li><li>Breadboarding</li>
           </ul>
         </div>
         <div class="skill-group">
           <h3 class="mono">Test Equipment</h3>
           <ul class="tags">
-            <li>Oscilloscopes</li><li>Multimeters</li><li>Spectrum analyzers</li>
-          </ul>
-        </div>
-        <div class="skill-group">
-          <h3 class="mono">Engineering Software</h3>
-          <ul class="tags">
-            <li>KiCad</li><li>SolidWorks</li><li>Ansys</li><li>MATLAB</li><li>XFLR5</li><li>Excel</li>
+            <li>Oscilloscopes</li><li>Function generators</li><li>Multimeters</li><li>Bench power supplies</li>
           </ul>
         </div>
         <div class="skill-group">
           <h3 class="mono">Programming &amp; Tools</h3>
           <ul class="tags">
-            <li>Python</li><li>C++</li><li>Git</li><li>Linux</li>
-            <li>OpenCV</li><li>MediaPipe</li><li>WebSockets</li>
+            <li>Python</li><li>Verilog (Vivado)</li><li>MATLAB</li><li>OpenCV</li><li>Git</li><li>Linux</li>
           </ul>
         </div>
         <div class="skill-group">
-          <h3 class="mono">Materials &amp; Manufacturing</h3>
+          <h3 class="mono">Design &amp; Simulation</h3>
           <ul class="tags">
-            <li>Composite fabrication</li><li>Epoxy handling</li><li>3D printing</li><li>Solar panel assembly</li>
+            <li>Multisim</li><li>Tinkercad</li><li>SolidWorks</li><li>XFLR5</li><li>3D printing</li>
           </ul>
         </div>
       </div>
@@ -285,50 +281,46 @@
           <p class="mono card-meta">Aug 2026 – Present</p>
           <h3>Solar Array &amp; Telemetry Team Member · Rutgers Solar Car Club</h3>
           <ul>
-            <li>Solder and assemble solar panels; run aerodynamic simulations to support vehicle design and energy strategy.</li>
-            <li>Built short-range Wi-Fi telemetry: an ESP32 receives the car's CAN traffic over UART and serves a live browser dashboard over WebSockets for real-time monitoring and debugging.</li>
+            <li>Built the team's short-range telemetry system for monitoring live vehicle data (see <a href="projects/solar-telemetry.html">Solar Car Telemetry</a>).</li>
+            <li>Also assemble solar panels and run aerodynamic simulations for the array subteam.</li>
           </ul>
         </div>
         <div class="timeline-item">
           <p class="mono card-meta">Aug 2026 – Present</p>
           <h3>Robotics Team Member · RU HART</h3>
           <ul>
-            <li>Building an autonomous delivery robot: wrote motor driver code, calibrated motors, and integrated sensors.</li>
-            <li>Developing autonomous capabilities using OpenCV and a web server interface.</li>
+            <li>Firmware and electronics for a team-built delivery robot: wrote the first prototype's drive code and am building its wireless E-stop (see <a href="projects/maxbot.html">MaxBot</a>).</li>
           </ul>
         </div>
         <div class="timeline-item">
           <p class="mono card-meta">Aug 2025 – May 2026</p>
           <h3>RF Design Engineer · IEEE</h3>
           <ul>
-            <li>Co-engineered a Yagi antenna using LoRa modules, applying impedance matching and resonance tuning to maximize signal efficiency.</li>
-            <li>Prototyped an RF telegraph that sends Morse code over a 433 MHz link and decodes it onto an LCD.</li>
-            <li>Ran iterative RF tests with teammates to refine device performance, turning theory into manufacturable hardware.</li>
+            <li>Built wireless prototypes on a small project team, including an Arduino-based Morse telegraph (see <a href="projects/rf-telegraph.html">RF Telegraph</a>).</li>
           </ul>
         </div>
         <div class="timeline-item">
           <p class="mono card-meta">Aug 2025 – May 2026</p>
           <h3>Design &amp; Manufacturing Lead · AIAA Aviation</h3>
           <ul>
-            <li>Led design and manufacturing of a speed-optimized aircraft, from concept to build, against strict aerospace requirements.</li>
-            <li>Fabricated lightweight composite structural components and built production timelines to keep fabrication on schedule.</li>
-            <li>Wrote proposals and presented preliminary design reviews to judges.</li>
+            <li>Led design and manufacturing of the team's competition aircraft through a full redesign and several iterations, reaching 110 mph (see <a href="projects/aiaa-aircraft.html">Requiem</a>).</li>
+            <li>Presented design reviews to judges and kept the build on schedule.</li>
           </ul>
         </div>
         <div class="timeline-item">
           <p class="mono card-meta">Aug 2025 – May 2026</p>
           <h3>Engineering Team Lead · SWEMatch</h3>
           <ul>
-            <li>Led a team of 6 through the full product lifecycle of a low-cost assistive technology device.</li>
-            <li>Designed the Python system architecture using computer vision and WebSockets; guided teammates in deploying ML models on Raspberry Pi for real-time camera inference.</li>
+            <li>Led a team of 6 from requirements to a working demo of a low-cost assistive device (see <a href="projects/assistive-device.html">NeuroLens</a>).</li>
           </ul>
         </div>
       </div>
 
       <h3 class="subhead">Relevant coursework <a class="mono" style="font-size:.85rem;font-weight:400;margin-left:8px" href="coursework.html">See lab work →</a></h3>
       <ul class="tags">
-        <li>Circuit Theory</li><li>Radio Frequency</li><li>Electromagnetism</li><li>Signal Processing</li>
-        <li>Digital Systems</li><li>Verilog</li><li>Materials Science</li><li>Quantum Computing</li><li>Computer Science</li>
+        <li>Principles of Electrical Engineering I</li><li>Digital Logic Design</li>
+        <li>Intro to Electrical &amp; Computer Engineering</li><li>Intro to Electrical Engineering II</li>
+        <!-- EDIT: add other courses by their exact catalog names --> 
       </ul>
     </section>
 
@@ -336,13 +328,12 @@
     <section id="contact" class="section container contact">
       <h2 class="section-title"><span class="mono accent">05.</span> Contact</h2>
       <p class="lead">
-        I'm looking for Summer 2027 internships in RF, hardware, and embedded systems.
+        I'm looking for Summer 2027 internships in embedded systems and firmware, and I'm open to relocation.
         Email is the fastest way to reach me.
       </p>
       <a class="btn primary" href="mailto:ag86899uni@gmail.com">Say hello</a>
       <div class="social mono" style="margin-top:20px">
         <a href="mailto:ag86899uni@gmail.com">ag86899uni@gmail.com</a>
-        <a href="tel:+16692687552">(669) 268-7552</a>
       </div>
     </section>
 

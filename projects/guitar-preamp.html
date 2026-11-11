@@ -25,7 +25,7 @@
 
     <p class="mono card-meta">2026 · Personal project · In progress</p>
     <h1>Guitar Preamplifier PCB</h1>
-    <p class="lead">A guitar preamplifier designed in KiCad, from schematic capture through board layout.</p>
+    <p class="lead">A battery-powered guitar preamp built around an OPA134 low-noise op-amp, designed in KiCad from schematic through board layout.</p>
     <ul class="tags" style="margin-top:16px"><li>KiCad</li><li>Schematic capture</li><li>PCB layout</li><li>Analog audio</li></ul>
 
     <!-- PHOTO (hidden until you have one): save a KiCad 3D render as ../images/guitar-preamp-3d.png,
@@ -40,29 +40,36 @@
     <p>
       I'm designing a guitar preamplifier PCB in KiCad, taking it from schematic capture through board layout.
     </p>
-    <!-- ADD: why this project? what should the preamp do (gain, tone controls, clean boost)? -->
+    <!-- ADD: why this project? -->
+
+    <h2>Target specs</h2>
+    <ul>
+      <li><strong>Supply:</strong> a single 9 V battery with a power switch. Two 100 kΩ resistors bias the
+        signal at half the supply (4.5 V), so the op-amp can swing both ways without a negative rail.</li>
+      <li><strong>Gain:</strong> adjustable from ×1 to about ×22 (0 to +27 dB). It's a non-inverting stage, so
+        gain = 1 + RV1/R1, with a 47 kΩ gain pot and R1 = 2.2 kΩ.</li>
+      <li><strong>Bandwidth:</strong> flat from about 15 Hz up. The input coupling capacitor sets a ~3 Hz corner,
+        and the 4.7 µF capacitor in the gain leg about 15 Hz, both well below a guitar's lowest note (~82 Hz).
+        That capacitor also keeps the DC gain at ×1, so the 4.5 V bias isn't amplified.</li>
+      <li><strong>Noise:</strong> the OPA134 is a low-noise, low-distortion audio op-amp, and the supply is
+        decoupled with a 100 nF capacitor.</li>
+      <li><strong>Connections:</strong> ¼" input and output jacks, with a 10 µF output capacitor to block the DC bias.</li>
+    </ul>
 
     <h2>Schematic</h2>
-    <!-- ADD: topology (op-amp? JFET? transistor?), part numbers, power supply (9V?), how you chose gain and component values -->
-    <!-- PHOTO: ../images/guitar-preamp-schematic.png -->
     <figure>
       <img src="../images/guitar-preamp-schematic.png" alt="Guitar preamp schematic: OPA134 non-inverting stage on a 9 V supply" />
       <figcaption>Schematic in KiCad.</figcaption>
     </figure>
 
 
-    <h2>Layout</h2>
-    <!-- ADD: layer count, grounding approach, how you kept the audio path quiet -->
-    <!-- PHOTO: ../images/guitar-preamp-layout.png -->
-    <figure>
-      <img src="../images/placeholder.svg" alt="Preamp PCB layout" />
-      <figcaption>Board layout.</figcaption>
-    </figure>
+    <!-- ADD: when the layout is done, add a "Layout" section with a screenshot saved as
+         ../images/guitar-preamp-layout.png, plus layer count and grounding approach. -->
 
 
     <h2>Status &amp; next steps</h2>
-    <!-- ADD: e.g. "Next: order boards, assemble, and measure frequency response on the scope." Update this as you go. -->
-    <p>In progress. Updates coming as I go.</p>
+    <p>Schematic complete. Next: finish the board layout, order and assemble the PCB, then measure gain and
+      frequency response on the oscilloscope to check them against these targets.</p>
   </main>
 
   <footer class="container footer mono">
