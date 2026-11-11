@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- To make a new project page: copy this file, rename it (e.g. smart-thermostat.html),
+       then link to it from the project card in index.html -->
+  <title>Project Title | Your Name</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">YN<span class="accent">_</span></a>
+      <nav>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container article">
+    <a class="back-link mono" href="../index.html#projects">← All projects</a>
+
+    <p class="mono card-meta">Fall 2026 · Personal project · ~6 weeks</p>
+    <h1>Project Title</h1>
+    <p class="lead">One-sentence summary: what you built and why it matters.</p>
+    <ul class="tags" style="margin-top:16px">
+      <li>ESP32</li><li>C++</li><li>KiCad</li><li>3D printing</li>
+    </ul>
+
+    <!-- Hero image: the best photo of the finished thing -->
+    <figure>
+      <img src="../images/placeholder.svg" alt="Finished project" />
+      <figcaption>The finished build.</figcaption>
+    </figure>
+
+    <h2>Overview</h2>
+    <p>
+      What problem were you solving? Why did you start this project? Keep it to 2–4 sentences.
+    </p>
+
+    <h2>My role</h2>
+    <p>
+      If this was a team project, say exactly what you were responsible for. Solo projects can skip this section.
+    </p>
+
+    <h2>Design</h2>
+    <p>
+      Explain the system. A block diagram helps a lot here. Then cover the key design decisions:
+      why this microcontroller, why this sensor, how you chose component values.
+    </p>
+    <figure>
+      <img src="../images/placeholder.svg" alt="Block diagram" />
+      <figcaption>System block diagram.</figcaption>
+    </figure>
+
+    <!-- Two images side by side -->
+    <div class="img-row">
+      <figure>
+        <img src="../images/placeholder.svg" alt="Schematic" />
+        <figcaption>Schematic (KiCad)</figcaption>
+      </figure>
+      <figure>
+        <img src="../images/placeholder.svg" alt="PCB layout" />
+        <figcaption>PCB layout</figcaption>
+      </figure>
+    </div>
+
+    <h2>Challenges &amp; debugging</h2>
+    <p>
+      This is the section interviewers care about most. What broke? How did you figure out why
+      (scope traces, multimeter readings, isolating subsystems)? What did you change?
+    </p>
+
+    <!-- Optional code snippet -->
+    <pre class="mono"><code>// short, interesting snippet only, link the full repo below
+void loop() {
+  float temp = readSensor();
+  if (temp > THRESHOLD) digitalWrite(FAN_PIN, HIGH);
+}</code></pre>
+
+    <h2>Results</h2>
+    <ul>
+      <li>Use measured numbers: "Battery life: 14 hours", "Noise floor reduced from 50 mV to 8 mV".</li>
+      <li>Include a scope screenshot or graph if you have one.</li>
+    </ul>
+
+    <!-- Optional demo video. Upload to YouTube (Unlisted is fine), click Share → Embed, and paste the src URL here.
+    <iframe class="video" src="https://www.youtube.com/embed/VIDEO_ID" allowfullscreen></iframe>
+    -->
+
+    <h2>What I'd do differently</h2>
+    <p>Shows self-awareness. One or two sentences on what you'd improve in a v2.</p>
+
+    <h2>Links</h2>
+    <ul>
+      <li><a href="https://github.com/yourusername/repo" target="_blank">Source code &amp; design files (GitHub)</a></li>
+    </ul>
+  </main>
+
+  <footer class="container footer mono">
+    <p>© 2026 Your Name</p>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500">
+  <rect width="800" height="500" fill="#1c232c"/>
+  <g stroke="#2dd4bf" stroke-width="3" fill="none" opacity="0.6">
+    <!-- little resistor / circuit motif -->
+    <path d="M220 250 H320 l12 -24 l24 48 l24 -48 l24 48 l24 -48 l12 24 H560"/>
+    <circle cx="220" cy="250" r="6" fill="#2dd4bf"/>
+    <circle cx="560" cy="250" r="6" fill="#2dd4bf"/>
+  </g>
+  <text x="400" y="340" text-anchor="middle" font-family="monospace" font-size="22" fill="#8b949e">replace with your image</text>
+</svg>

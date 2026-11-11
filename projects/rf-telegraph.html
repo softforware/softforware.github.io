@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>RF Telegraph | Ananya Gupta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">AG<span class="accent">_</span></a>
+      <nav>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container article">
+    <a class="back-link mono" href="../index.html#projects">← All projects</a>
+
+    <p class="mono card-meta">Fall 2025 · IEEE · RF Design Engineer · Team of 3</p>
+    <h1>RF Telegraph</h1>
+    <p class="lead">Tap Morse code on one breadboard and watch it appear as text on an LCD on the other, sent over a 433 MHz radio link.</p>
+    <ul class="tags" style="margin-top:16px"><li>433 MHz RF</li><li>Arduino</li><li>C++</li><li>RadioHead (ASK)</li><li>16×2 LCD</li><li>Breadboarding</li></ul>
+
+    <figure>
+      <img src="../images/rf-telegraph.jpg" alt="Two breadboards: the receiver with an RF receiver module and a 16x2 LCD reading 'whatup?', and the transmitter with an RF transmitter module and two push buttons" />
+      <figcaption>Top: the receiver, with the RF receiver module and LCD showing a decoded message. Bottom: the transmitter, with the Morse key and clear buttons.</figcaption>
+    </figure>
+
+    <h2>Overview</h2>
+    <p>
+      As an RF Design Engineer with IEEE, I worked in a team of three to build a modern take on the telegraph. It uses two Arduinos: a transmitter with a Morse key, and a receiver
+      that decodes the message onto an LCD, linked by inexpensive 433 MHz ASK radio modules.
+    </p>
+
+    <h2>My role</h2>
+    <ul>
+      <li>Added the radio transmission to the Morse code logic, turning each key event into a radio packet.</li>
+      <li>Wired the transmitter circuit: the RF transmitter module and the key and clear buttons.</li>
+      <li>Wired the LCD display with a teammate.</li>
+      <li>Documented the RF and LCD design and our test results.</li>
+    </ul>
+
+    <h2>How it works</h2>
+    <p>
+      <strong>Transmitter.</strong> The Arduino checks the key button every 100 ms and times each press. The
+      timing follows standard Morse conventions: a dash is three dot-lengths, letters are separated by three
+      units, and words by seven.
+    </p>
+    <ul>
+      <li>A press shorter than 300 ms is a <strong>dot</strong>. A press of 300 ms or longer is a <strong>dash</strong>.</li>
+      <li>A 300 ms pause marks the <strong>end of a letter</strong>. A longer pause adds a <strong>space</strong> between words.</li>
+      <li>A second button <strong>clears</strong> the receiver's screen.</li>
+    </ul>
+    <p>
+      Each event goes out the moment it happens as a one-character packet, using the RadioHead
+      <span class="mono">RH_ASK</span> driver:
+    </p>
+    <pre class="mono"><code>0 = dot    1 = dash    2 = end of letter    3 = word space    4 = clear screen</code></pre>
+    <p>
+      <strong>Receiver.</strong> The second Arduino collects the incoming dots and dashes. When an
+      end-of-letter packet arrives, it decodes them into a letter and prints it on the 16×2 LCD, so the
+      message builds on the screen as you type. Invalid sequences show as "?".
+    </p>
+    <p>
+      <strong>Decoding.</strong> Each letter's dots and dashes are matched against a Morse lookup string, and
+      the matching position is read from a parallel string to get the letter. We tried a map first, but
+      Arduino doesn't natively support maps, and the workarounds were too slow to keep up with the radio link.
+    </p>
+    <p>
+      <strong>Display.</strong> Two potentiometers set the LCD's contrast and backlight, so they can be
+      adjusted instead of being fixed by resistors. A 220 Ω resistor protects the backlight.
+    </p>
+
+    <h2>Development</h2>
+    <p>
+      We started with a single-Arduino Morse translator in Tinkercad, with the key, decoding, and LCD all on one
+      board. Tinkercad doesn't support RF parts, so we then split the system across two Arduinos on real
+      hardware and added the 433 MHz link.
+    </p>
+
+    <h2>Results</h2>
+    <p>
+      The full system worked end to end, from keying through transmission and decoding to the display. With
+      bare radio modules and no antennas, the link was reliable across a room, but transmissions started to
+      drop 10–20 steps away.
+    </p>
+
+    <h2>What I'd do differently</h2>
+    <ul>
+      <li>Add antennas to the transmitter and receiver, and power the radios from a higher-voltage supply, to extend range from across a room to across campus.</li>
+      <li>Improve scrolling so messages longer than 16 characters stay readable.</li>
+    </ul>
+
+    <h2>Code</h2>
+    <p><a href="https://github.com/softforware/rf-telegraph" target="_blank">Transmitter, receiver, and Tinkercad sketches on GitHub →</a></p>
+  </main>
+
+  <footer class="container footer mono">
+    <p>© 2026 Ananya Gupta</p>
+  </footer>
+</body>
+</html>

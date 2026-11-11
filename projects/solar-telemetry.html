@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Solar Car Telemetry | Ananya Gupta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">AG<span class="accent">_</span></a>
+      <nav>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container article">
+    <a class="back-link mono" href="../index.html#projects">← All projects</a>
+
+    <p class="mono card-meta">Aug 2026 – present · Rutgers Solar Car Club · Telemetry</p>
+    <h1>Solar Car Telemetry</h1>
+    <p class="lead">
+      Live vehicle data from the car's CAN bus, viewable in any phone or laptop browser over the car's own Wi-Fi network.
+    </p>
+    <ul class="tags" style="margin-top:16px"><li>ESP32-C3</li><li>CAN bus</li><li>UART / SLCAN</li><li>Wi-Fi access point</li><li>WebSockets</li><li>JavaScript</li></ul>
+
+    <figure>
+      <img src="../images/solar-telemetry-esp32.jpg" alt="Ananya holding the telemetry ESP32, wired to one of the solar car's boards on the test bench" />
+      <figcaption>The telemetry ESP32, connected to the car's electronics on the test bench.</figcaption>
+    </figure>
+
+    <h2>Overview</h2>
+    <p>
+      Every board on the solar car (battery management, motor, driver controls) reports its status on a
+      shared CAN bus. To let the team see that data in real time, I built a short-range telemetry system
+      around a single ESP32. Anyone nearby can join its Wi-Fi network, open a browser, and watch the car's
+      data live, with nothing to install.
+    </p>
+
+    <h2>How it works</h2>
+    <ol>
+      <li><strong>Getting the car's data:</strong> one of the car's boards forwards every CAN frame to an
+        ESP32-C3 over a serial (UART) link at 460,800 baud, as lines of text in the SLCAN format. The ESP32
+        parses each line and keeps the latest frame for every CAN ID.</li>
+      <li><strong>Its own network:</strong> the ESP32 creates its own Wi-Fi access point, so it works anywhere,
+        with no router or internet connection. The dashboard lives at <span class="mono">192.168.4.1</span>.</li>
+      <li><strong>Live updates:</strong> it serves the dashboard page, then pushes data over WebSockets ten times
+        a second. It only sends the CAN IDs that changed, in small batches, to keep the link light. A browser
+        that just connected first gets a full snapshot, so switches and faults that rarely re-send still show up.</li>
+      <li><strong>Decoding in the browser:</strong> the ESP32 only relays raw frames. The page's JavaScript
+        turns them into named signals, on/off states, fault flags, and scaled units, so changing how a signal
+        is shown doesn't require reflashing the ESP32.</li>
+    </ol>
+
+    <h2>The dashboard</h2>
+    <p>
+      The page groups decoded data by subsystem: motor, high-voltage battery, low-voltage battery, driver
+      controls, the four solar array MPPTs, and all 24 battery module voltages. Active faults show in a red
+      banner at the top. Values that stop arriving dim out, so stale data is never mistaken for live data.
+      A Raw CAN tab lists every ID with its data, count, and rate for debugging. The header shows the
+      connection status, CAN frames received per second, and a running count of malformed serial lines.
+    </p>
+    <div class="img-row">
+      <figure>
+        <img src="../images/solar-telemetry-1.jpg" alt="Dashboard on a phone showing motor and high-voltage battery data" />
+        <figcaption>Motor and HV battery, served from the ESP32 at 192.168.4.1.</figcaption>
+      </figure>
+      <figure>
+        <img src="../images/solar-telemetry-2.jpg" alt="Dashboard showing low-voltage battery and driver control data" />
+        <figcaption>LV battery and driver controls.</figcaption>
+      </figure>
+    </div>
+    <!-- ADD: say when these screenshots were taken (e.g. "bench test with the HV pack disconnected"),
+         since the HV voltage reads 0 V and a Cell Undervoltage fault is showing -->
+
+    <h2>Code</h2>
+    <p>
+      The source code is kept private for competitive reasons. It contains the Rutgers Solar Car team's
+      CAN message map and vehicle fault definitions, which the team doesn't share publicly while we compete.
+      I'm happy to walk through the code and architecture in an interview.
+    </p>
+
+    <!-- ADD: uncomment once written → <h2>Next steps</h2>
+         (e.g. converting the remaining "raw" values to real units, or long-range telemetry) -->
+  </main>
+
+  <footer class="container footer mono">
+    <p>© 2026 Ananya Gupta</p>
+  </footer>
+</body>
+</html>

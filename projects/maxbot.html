@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MaxBot | Ananya Gupta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">AG<span class="accent">_</span></a>
+      <nav>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container article">
+    <a class="back-link mono" href="../index.html#projects">← All projects</a>
+
+    <p class="mono card-meta">Aug 2026 – present · RU HART · In progress</p>
+    <h1>MaxBot: Autonomous Delivery Robot</h1>
+    <p class="lead">
+      A team-built delivery robot. I wrote its motor control code and am now building a wireless
+      emergency-stop remote with two ESP32-S3s.
+    </p>
+    <ul class="tags" style="margin-top:16px"><li>ESP32-S3</li><li>C++ (Arduino)</li><li>PWM motor control</li><li>ESP-NOW</li><li>Safety systems</li></ul>
+
+    <h2>First iteration: drive test</h2>
+    <figure>
+      <video class="video video-tall" controls muted playsinline preload="metadata" poster="../images/maxbot-poster.jpg">
+        <source src="../videos/maxbot-v1.mp4" type="video/mp4" />
+        Your browser can't play this video.
+      </video>
+      <figcaption>The first, very basic iteration of MaxBot running my motor control code.</figcaption>
+    </figure>
+    <p>I wrote the drive code for this first version. It controls two motor drivers, one per side:</p>
+    <ul>
+      <li><strong>Bidirectional control:</strong> each side has a forward and a reverse PWM input, and a single
+        signed speed from −255 to +255 sets direction and power.</li>
+      <li><strong>20 kHz PWM:</strong> above the range of human hearing, so the motors don't whine.</li>
+      <li><strong>Power cap:</strong> speed is limited to 180/255 to protect the drivetrain during testing.</li>
+      <li><strong>Smooth ramping:</strong> speed changes one step every 5 ms instead of jumping, which avoids
+        current spikes and wheel slip.</li>
+      <li><strong>Test sequence:</strong> forward, stop, reverse, stop, spin left, spin right, which checks
+        every motor direction and differential steering.</li>
+    </ul>
+
+    <h2>In progress: wireless E-stop remote</h2>
+    <p>
+      A delivery robot needs a reliable way to stop it remotely. I'm building a handheld remote with two
+      ESP32-S3s, one on the remote and one on the robot, talking over ESP-NOW (a direct, low-latency
+      ESP32-to-ESP32 radio link that needs no Wi-Fi network). Both prototype sketches work on the bench.
+    </p>
+    <p><strong>Remote (transmitter)</strong></p>
+    <ul>
+      <li><strong>Three buttons:</strong> red = STOP (latching), white = SLOW, blue = NORMAL. A joystick gives manual driving.</li>
+      <li><strong>Command rate:</strong> it sends a small command packet about 33 times a second. Each packet has
+        a sequence number, the mode, an E-stop flag, and the joystick position.</li>
+      <li><strong>Joystick handling:</strong> the joystick is calibrated at power-up and has a deadband, so it
+        reads exactly zero at rest.</li>
+      <li><strong>Debounced buttons</strong>, plus a link LED: fast blink while connecting, solid when
+        linked, off when the link is lost.</li>
+    </ul>
+    <p><strong>Robot (receiver): designed to fail safe</strong></p>
+    <ul>
+      <li><strong>Loss of signal = stop:</strong> if no packet arrives for 250 ms, the robot stops. A dead
+        battery, an out-of-range remote, or interference all stop the robot rather than leave it running.</li>
+      <li><strong>Re-arm required:</strong> after a lost link, the robot stays locked out until the operator
+        presses STOP and then deliberately re-arms it, so it never takes off on its own when the signal returns.</li>
+      <li><strong>Stale packet rejection:</strong> out-of-order or repeated packets are discarded using their
+        sequence numbers.</li>
+      <li><strong>Speed limits per mode:</strong> SLOW halves the top speed and turn rate.</li>
+      <li><strong>Status LED:</strong> an RGB LED shows the state at a glance: yellow = no link, red = stopped,
+        orange = locked out, blue = slow, green = normal.</li>
+    </ul>
+
+    <h2>Next steps</h2>
+    <ul>
+      <li>Finish the remote prototype and connect the receiver to MaxBot's motor drivers.</li>
+      <li>Design a custom PCB for the E-stop remote.</li>
+    </ul>
+
+    <!-- ADD: E-stop prototype photos, e.g.
+    <div class="img-row">
+      <figure><img src="../images/estop-remote.jpg" alt="E-stop remote prototype" /><figcaption>Remote</figcaption></figure>
+      <figure><img src="../images/estop-receiver.jpg" alt="E-stop receiver on the robot" /><figcaption>Receiver</figcaption></figure>
+    </div>
+    -->
+  </main>
+
+  <footer class="container footer mono">
+    <p>© 2026 Ananya Gupta</p>
+  </footer>
+</body>
+</html>

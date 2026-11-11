@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Requiem Aircraft | Ananya Gupta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">AG<span class="accent">_</span></a>
+      <nav>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container article">
+    <a class="back-link mono" href="../index.html#projects">← All projects</a>
+
+    <p class="mono card-meta">Aug 2025 – May 2026 · AIAA Aviation · Design &amp; Manufacturing Lead</p>
+    <h1>Requiem: 110 mph Competition Aircraft</h1>
+    <p class="lead">
+      From an oversized foam prototype that couldn't fly to a lightweight V-tail aircraft that reached
+      110 mph, through one complete redesign and many rounds of iteration.
+    </p>
+    <ul class="tags" style="margin-top:16px"><li>SolidWorks</li><li>XFLR5</li><li>MATLAB</li><li>3D printing (PLA)</li><li>Carbon fiber</li><li>Foam fabrication</li></ul>
+
+    <figure>
+      <img src="../images/aiaa-card.jpg" alt="Requiem on the workbench: foam wings, carbon boom, and 3D-printed bullet fuselage with the hatch open" />
+      <figcaption>The final version of Requiem.</figcaption>
+    </figure>
+
+    <h2>Overview</h2>
+    <p>
+      As Design &amp; Manufacturing Lead for our AIAA team, I led the design and build of a speed-optimized
+      aircraft against strict aerospace requirements, tracking requirements and following build and test
+      procedures throughout. I wrote proposals and presented preliminary design reviews to judges, using
+      SolidWorks, XFLR5, and MATLAB to justify our aerodynamic and motor/propeller choices.
+    </p>
+
+    <h2>Version 1: the first prototype</h2>
+    <p>
+      Our first aircraft had a pink foam fuselage and an H-tail. It was too large to fly, so we redesigned
+      it from scratch.
+    </p>
+
+    <h2>Version 2: Requiem, a complete redesign</h2>
+    <p>
+      Requiem changed almost everything: a 3D-printed bullet-shaped fuselage, a carbon fiber tail boom,
+      and a V-tail instead of the H-tail.
+    </p>
+    <div class="img-row">
+      <figure>
+        <img src="../images/aiaa-v1-prototype.jpg" alt="The first prototype: a large pink foam aircraft with an H-tail, held by two team members" />
+        <figcaption>Version 1: foam fuselage and H-tail. Too big to fly.</figcaption>
+      </figure>
+      <figure>
+        <img src="../images/aiaa-requiem-v1.jpg" alt="Early Requiem: pink foam wings, carbon boom, V-tail, and white 3D-printed fuselage" />
+        <figcaption>Version 2: Requiem, with a V-tail, boom, and 3D-printed fuselage.</figcaption>
+      </figure>
+    </div>
+    <div class="img-row">
+      <figure>
+        <img src="../images/aiaa-build.jpg" alt="Building wing sections at the workbench, with CAD of the fuselage on a laptop and a wiring diagram on the whiteboard" />
+        <figcaption>Building wing sections, with fuselage CAD on the laptop and the wiring plan on the whiteboard.</figcaption>
+      </figure>
+      <figure>
+        <img src="../images/aiaa-hatch.jpg" alt="Inside the 3D-printed fuselage: LiPo battery and wiring under the carbon wing spar" />
+        <figcaption>Inside the fuselage: the battery and wiring sit under the carbon wing spar.</figcaption>
+      </figure>
+    </div>
+
+    <h2>Iterating on Requiem</h2>
+    <p>We rebuilt Requiem again and again. Each version:</p>
+    <ul>
+      <li><strong>Was lighter:</strong> we switched the printed parts to lightweight PLA.</li>
+      <li><strong>Was easier to fix on competition day:</strong> we changed the fasteners and added a fuselage
+        hatch, so batteries, wiring, and damaged parts can be reached and swapped quickly at the field.</li>
+    </ul>
+    <div class="img-row">
+      <figure>
+        <img src="../images/aiaa-requiem-field.jpg" alt="Requiem at the flying field, wings reinforced with tape and motor wiring exposed" />
+        <figcaption>Requiem at the field.</figcaption>
+      </figure>
+      <figure>
+        <img src="../images/aiaa-field-setup.jpg" alt="Wiring servos through the fuselage hatch during setup at the field" />
+        <figcaption>Setting up through the fuselage hatch on flight day.</figcaption>
+      </figure>
+    </div>
+
+    <h2>Final version: 3D-printed tail</h2>
+    <p>
+      In the final iteration, we 3D-printed the tail as well, giving us a printed fuselage and tail joined by
+      the carbon boom.
+    </p>
+    <div class="img-row">
+      <figure>
+        <img src="../images/aiaa-printed-tail.jpg" alt="Final Requiem held up, showing the 3D-printed V-tail at the end of the carbon boom" />
+        <figcaption>The 3D-printed V-tail on the carbon boom.</figcaption>
+      </figure>
+      <figure>
+        <img src="../images/aiaa-final-bench.jpg" alt="Final Requiem on the workbench with the printed tail and open fuselage hatch" />
+        <figcaption>Final assembly.</figcaption>
+      </figure>
+    </div>
+
+    <h2>Propulsion</h2>
+    <ul>
+      <li><strong>Motor:</strong> 1300 kV brushless, rated 680 W</li>
+      <li><strong>Propeller:</strong> APC 8×10E</li>
+      <li><strong>Battery:</strong> 4S LiPo</li>
+    </ul>
+
+    <h2>Simulation &amp; stability analysis</h2>
+    <p>
+      I ran all of the aircraft's aerodynamic and stability simulations in XFLR5 (vortex lattice method),
+      to confirm Requiem would be stable before we built and flew it.
+    </p>
+
+    <h3 class="subhead">Mass model and geometry</h3>
+    <p>
+      I modeled each component (servos, carbon rod and spar, electronics, and the rest of the hardware)
+      as a point mass at its real position, so XFLR5 could calculate the center of gravity of the 1.014 kg aircraft. The
+      fuselage was left out of the aerodynamic model, as XFLR5's guidelines recommend, and the V-tail was
+      modeled as an angled elevator.
+    </p>
+    <ul>
+      <li><strong>Wing:</strong> 1.00 m span, 0.15 m² area (aspect ratio 6.7)</li>
+      <li><strong>V-tail:</strong> 0.06 m² on a 0.48 m lever arm, giving a tail volume of 0.85</li>
+    </ul>
+    <figure>
+      <img src="../images/xflr5-mass-model.jpg" alt="XFLR5 3D model of Requiem showing the wing, V-tail, and point masses for each component" />
+      <figcaption>XFLR5 model with point masses for each component, used to locate the center of gravity.</figcaption>
+    </figure>
+
+    <h3 class="subhead">Static stability</h3>
+    <p>
+      A fixed-speed analysis at 20 m/s showed the aircraft is statically stable: the pitching moment (Cm)
+      decreases as angle of attack increases, so the plane naturally returns to its trim angle after a
+      disturbance.
+    </p>
+    <ul>
+      <li><strong>Trim:</strong> Cm crosses zero at about +0.6° angle of attack (CL ≈ 0.23), so the plane
+        trims hands-off at about 22 m/s.</li>
+      <li><strong>Static margin:</strong> about 25%, a conservative, very stable setup.</li>
+      <li><strong>Max lift-to-drag:</strong> about 19 at around 4° (wing and tail only).</li>
+    </ul>
+    <figure>
+      <img src="../images/xflr5-static.jpg" alt="XFLR5 plots of lift force, lift coefficient, pitching moment, and lift-to-drag ratio versus angle of attack" />
+      <figcaption>Lift, lift coefficient, pitching moment, and lift-to-drag ratio versus angle of attack. The downward Cm slope confirms static stability.</figcaption>
+    </figure>
+
+    <h3 class="subhead">Dynamic stability</h3>
+    <p>I ran a stability analysis to check how the aircraft responds over time after a disturbance:</p>
+    <ul>
+      <li><strong>Phugoid (slow pitch and speed oscillation):</strong> stable, with an 11.5 s period and a
+        damping ratio of 0.03. The oscillation dies out slowly, which is typical of a clean, low-drag aircraft.</li>
+      <li><strong>Dutch roll (yaw and roll wobble):</strong> stable, at 1.89 Hz with a damping ratio of 0.17.
+        It settles in about 2 seconds.</li>
+      <li><strong>Spiral mode:</strong> mildly unstable, doubling in about 10 s. This comes from the
+        combination of a main wing with no dihedral and a V-tail with strong directional stability. The
+        divergence is slow enough for the pilot to correct easily, and it's common on sport and racing aircraft.
+        Adding 2–3° of wing dihedral would make it neutral.</li>
+    </ul>
+    <div class="img-row">
+      <figure>
+        <img src="../images/xflr5-phugoid.jpg" alt="Phugoid time response: forward speed oscillation decaying over about 200 seconds" />
+        <figcaption>Phugoid: the speed oscillation decays, so the mode is stable.</figcaption>
+      </figure>
+      <figure>
+        <img src="../images/xflr5-spiral.jpg" alt="Spiral mode time response: bank angle growing slowly without oscillation" />
+        <figcaption>Spiral mode: the bank angle grows slowly. This linear model exaggerates the values over long times; what matters is the growth rate.</figcaption>
+      </figure>
+    </div>
+
+    <h2>Results</h2>
+    <p>Requiem reached a top speed of <strong>110 mph</strong>.</p>
+    <figure>
+      <img src="../images/aiaa-team.jpg" alt="The AIAA team at the flying field holding the aircraft" />
+      <figcaption>The team at the flying field.</figcaption>
+    </figure>
+    <!-- ADD: competition result or placement, if any; weight of the final version vs. version 1 -->
+
+    <!-- ADD: the short-period mode from XFLR5 (Mode 1 or 2) to complete the stability summary. -->
+  </main>
+
+  <footer class="container footer mono">
+    <p>© 2026 Ananya Gupta</p>
+  </footer>
+</body>
+</html>

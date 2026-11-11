@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NeuroLens | Ananya Gupta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">AG<span class="accent">_</span></a>
+      <nav>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container article">
+    <a class="back-link mono" href="../index.html#projects">← All projects</a>
+
+    <p class="mono card-meta">Aug 2025 – May 2026 · SWEMatch · Engineering Team Lead</p>
+    <h1>NeuroLens: Emotion Recognition Assistant</h1>
+    <p class="lead">
+      A low-cost assistive tool that reads the facial expression of the person in front of the user and shows
+      the detected emotion in real time. The Raspberry Pi Zero 2W and its camera are a fully standalone
+      system: all of the computer vision runs on the Pi itself, and the results are streamed live over WebSockets.
+    </p>
+    <ul class="tags" style="margin-top:16px"><li>Raspberry Pi Zero 2W</li><li>Arducam v3 (IMX708)</li><li>Python</li><li>OpenCV (Haar cascades)</li><li>FER-2013</li><li>WebSockets</li><li>HTML/CSS/JS</li></ul>
+
+    <figure>
+      <video class="video" controls muted playsinline preload="metadata" poster="../images/neurolens-card.jpg">
+        <source src="../videos/neurolens-demo.mp4" type="video/mp4" />
+        Your browser can't play this video.
+      </video>
+      <figcaption>
+        Working demo, with all processing running on the Raspberry Pi and results streamed over WebSockets.
+        As the expression in the camera view changes, the web app updates live with the top
+        emotion and its confidence (angry, happy, surprise), shows "No faces detected" when no one is in
+        frame, and offers a high-contrast display mode.
+      </figcaption>
+    </figure>
+
+    <h2>The problem</h2>
+    <p>
+      About 1 in 127 people are autistic (WHO), and many find it hard to read nonverbal cues like facial
+      expressions, which can make social situations stressful. NeuroLens is designed as a socio-emotional
+      learning (SEL) aid for children 6 and up: a tool for practising emotion recognition in class or
+      role-play, and for checking in during real conversations.
+    </p>
+
+    <h2>My role</h2>
+    <ul>
+      <li>Led the engineering team through requirements, system design, prototyping, and testing.</li>
+      <li>Designed the Python system architecture around computer vision and WebSockets.</li>
+      <li>Guided teammates in deploying ML models on the Raspberry Pi for real-time camera inference.</li>
+    </ul>
+
+    <h2>How it works</h2>
+    <pre class="mono"><code>┌──────────── Raspberry Pi Zero 2W (standalone) ────────────┐
+│ Arducam v3 → Haar face detection → CNN emotion classifier │ ──WebSocket──▶ web app (any browser)
+└───────────────────────────────────────────────────────────┘</code></pre>
+    <p>
+      <strong>Everything runs on the Pi.</strong> The Pi and camera work as their own self-contained device:
+      capture, face detection, and emotion classification all happen on the Pi Zero 2W, with no laptop, cloud
+      server, or external GPU doing the processing. The Pi only sends out the results, streaming them over
+      WebSockets to the web app, which just displays them.
+    </p>
+    <ol>
+      <li><strong>Capture:</strong> the Arducam v3's high image quality gives clear facial input to the
+        Raspberry Pi Zero 2W.</li>
+      <li><strong>Face detection:</strong> OpenCV Haar cascades find each face in the frame.</li>
+      <li><strong>Emotion recognition:</strong> the face is cropped and classified into one of seven emotions
+        (angry, disgust, fear, happy, neutral, sad, surprise) by a compact CNN I trained on FER-2013.</li>
+      <li><strong>Live output:</strong> the Pi runs a WebSocket server and the web app is the client, so each
+        result is pushed to the app as soon as it's recognised. The app shows the top emotion with its
+        confidence, plus the other likely emotions.</li>
+    </ol>
+
+    <h2>Making the model light enough for a Pi Zero</h2>
+    <p>
+      A Pi Zero 2W has very little processing power, so every part of the pipeline was chosen to keep
+      output real-time:
+    </p>
+    <ul>
+      <li><strong>A small CNN trained on FER-2013.</strong> I designed a compact network for 48×48 grayscale
+        faces: three convolution blocks (16, 32, and 64 filters, each with batch normalization and max
+        pooling), then one 64-unit dense layer with dropout and a 7-way softmax. It has about 172,000
+        parameters in total. I trained it for 25 epochs on FER-2013's labelled faces.</li>
+      <li><strong>Quantized export.</strong> Converting to TensorFlow Lite with default optimization shrank the
+        model to <strong>about 178 KB</strong>.</li>
+      <li><strong>No ML framework on the Pi.</strong> The server runs the trained network in plain NumPy: I
+        exported the weights and wrote the forward pass (convolution, batch norm, ReLU, pooling, dense layers,
+        and softmax) by hand, so the Pi only needs NumPy and OpenCV.</li>
+      <li><strong>Cheaper face detection.</strong> Haar cascades run on a frame downscaled to 320×240, and the
+        face coordinates are scaled back up to crop from the full 640×480 frame.</li>
+      <li><strong>Non-blocking server.</strong> Detection runs in a background thread, so the WebSocket server
+        stays responsive while the Pi processes each frame.</li>
+    </ul>
+
+    <h2>Design decisions</h2>
+    <ul>
+      <li>
+        <strong>Processor: Raspberry Pi Zero 2W, not an ESP32 or a full Pi.</strong> A full-size Pi is too big
+        to wear. The ESP32's single-core 32-bit processor is limited to light, specialized models and can't keep
+        up with real-time video, and the ESP32-CAM's image quality is too low for subtle facial features. The Pi
+        Zero 2W's quad-core 64-bit processor fits the size budget and can run inference on live video.
+      </li>
+      <li>
+        <strong>Camera: Arducam v3 with a 12 MP IMX708 sensor.</strong> Emotions show in small details around the
+        eyes and mouth, so image quality mattered. Autofocus keeps the face sharp as distance changes.
+      </li>
+      <li>
+        <strong>WebSockets, not HTTP polling.</strong> Repeated HTTPS requests added too much latency for a live
+        conversation. A WebSocket lets the Pi push each result as soon as it's ready.
+      </li>
+      <li>
+        <strong>A web app, not a mobile app.</strong> A browser-based display gave faster access to a continuous
+        stream of results, with nothing to install.
+      </li>
+    </ul>
+
+    <h2>Challenges</h2>
+    <ul>
+      <li><strong>Limited processing power.</strong> Running face detection and emotion classification on a
+        Pi Zero 2W in real time was the main constraint. I handled it with the compact model, the plain-NumPy
+        inference, and downscaled face detection described above.</li>
+      <li><strong>Poor lighting.</strong> Accuracy dropped in dim or uneven light. To help, each face crop is
+        contrast-equalized with CLAHE (adaptive histogram equalization) before classification, a slightly
+        padded crop gives the model the full face, and the camera runs with auto exposure and auto white
+        balance.</li>
+    </ul>
+
+    <h2>Applications</h2>
+    <ul>
+      <li><strong>SEL classroom tool:</strong> helps children learn and recognize basic emotions.</li>
+      <li><strong>Classroom game:</strong> children try to read the emotion someone else is conveying, then
+        check whether they were right.</li>
+      <li><strong>Self-expression practice:</strong> autistic people often find it hard to tell what emotions
+        their own face is conveying. NeuroLens can show which expression they're making and the emotion it's
+        usually read as.</li>
+    </ul>
+
+    <h2>Next steps</h2>
+    <ul>
+      <li><strong>Better accuracy in hard conditions:</strong> retrain with more varied data (different
+        lighting and angles), train longer, and add augmentation such as flips, rotations, and brightness
+        shifts, so the model holds up on a head-mounted camera.</li>
+      <li><strong>Body language:</strong> add pose estimation (e.g. OpenPose) and a second classifier, and
+        combine it with the facial result for the final emotion.</li>
+      <li><strong>Wearable form factor:</strong> package the Pi and camera into a module that attaches to the
+        side of any pair of glasses.</li>
+    </ul>
+
+    <!-- ADD: build steps with photos, e.g.
+    <h2>Build</h2>
+    <div class="img-row">
+      <figure><img src="../images/neurolens-step1.jpg" alt="" /><figcaption></figcaption></figure>
+      <figure><img src="../images/neurolens-step2.jpg" alt="" /><figcaption></figcaption></figure>
+    </div>
+    -->
+
+    <!-- ADD: once the code is on GitHub:
+    <h2>Code</h2>
+    <p><a href="https://github.com/softforware/REPO-NAME" target="_blank">Source on GitHub →</a></p>
+    -->
+  </main>
+
+  <footer class="container footer mono">
+    <p>© 2026 Ananya Gupta</p>
+  </footer>
+</body>
+</html>
