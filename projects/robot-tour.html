@@ -30,11 +30,11 @@
       An autonomous robot that drives a track we only see when the competition timer starts. Within 10 minutes
       we had to program the route, place the robot, and let it run, with three attempts to get it right.
     </p>
-    <ul class="tags" style="margin-top:16px"><li>Arduino</li><li>C++</li><li>DC motors + encoders</li><li>PI speed control</li><li>Interrupts</li><li>Stepper motors</li><li>Open-loop timing</li></ul>
+    <ul class="tags" style="margin-top:16px"><li>Arduino</li><li>C++</li><li>DC motors + encoders</li><li>PI control (anti-windup)</li><li>Interrupts</li><li>Stepper motors</li><li>Open-loop timing</li></ul>
 
     <figure>
-      <img src="../images/robottour-run.jpg" alt="Ananya placing the robot on the competition floor before a run" />
-      <figcaption>Starting a run on competition day.</figcaption>
+      <img src="../images/robottour-run.jpg" alt="Ananya placing the encoder robot on the floor for a test run" />
+      <figcaption>Starting a test run with the encoder robot.</figcaption>
     </figure>
 
     <h2>The challenge</h2>
@@ -82,16 +82,26 @@
         184 mm of travel per revolution, each pulse is about 0.34 mm.</li>
       <li><strong>Smooth motion profile:</strong> each move ramps up, cruises, and ramps down at a set
         acceleration, so the wheels don't slip at the start or overshoot at the end.</li>
-      <li><strong>PI speed control:</strong> every 30 ms, the code compares each wheel's measured speed to the
-        profile and adjusts its PWM with a proportional-integral loop, then stops the wheel at the target count.</li>
+      <li><strong>PI speed control with anti-windup:</strong> every 30 ms, the code compares each wheel's measured
+        speed to the profile and adjusts its PWM with a proportional-integral loop, then stops the wheel at the
+        target count. The integrator pauses while the PWM output is maxed out, so it doesn't build up and cause
+        an overshoot once the wheel catches up.</li>
+      <li><strong>Wheel sync:</strong> each wheel controlling only its own speed lets small differences add up, so the
+        robot drifts on long straights. A second loop compares the two wheels' counts and slows whichever wheel is
+        ahead while speeding up the other, keeping straight runs straight and turns symmetric.</li>
+      <li><strong>Interrupt-safe reads:</strong> the 32-bit encoder counts are copied with interrupts briefly paused,
+        since an 8-bit AVR reads them in pieces and an encoder pulse arriving mid-read would corrupt the value.</li>
       <li><strong>Calibrated turns:</strong> a 90° turn is a fixed encoder count (425 pulses), measured on the
         robot, with the wheels driven in opposite directions.</li>
     </ul>
-    <pre class="mono"><code>// mm to encoder counts for a forward move
-distance = mm * ENCODER_COUNTS_PER_REV / MM_PER_REV;   // 540 counts / 184 mm</code></pre>
+    <pre class="mono"><code>// Wheel sync: slow the wheel that's ahead, speed up the other
+long diff = mtrLeft.getCount() - mtrRight.getCount();
+int trim = constrain(diff * SYNC_GAIN, -SYNC_MAX, SYNC_MAX);
+mtrLeft.setTrim(-trim);
+mtrRight.setTrim(trim);</code></pre>
     <p class="mono"><a href="../code/robot-tour/robot_tour_encoders.ino" target="_blank">robot_tour_encoders.ino</a></p>
 
-    <h2>Competition</h2>
+    <h2>Presenting it</h2>
     <figure>
       <img src="../images/robottour-fair.jpg" alt="Ananya with the encoder robot and a Robot Tour display board" />
       <figcaption>Showing the encoder robot and our display board.</figcaption>

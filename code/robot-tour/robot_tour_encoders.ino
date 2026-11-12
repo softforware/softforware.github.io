@@ -25,6 +25,8 @@
 #define MM_PER_REV              184    // Set to the number of mm per wheel revolution (Hence : Diameter * Pi)
 #define ENCODER_COUNTS_90_DEG   425    // Set to the number of encoder pulses to make a 90 degree turn
 #define SPEED_MIN               120    // Minimum speed (pulses/second) use at the end of individual moves
+#define SYNC_GAIN                 2    // PWM correction per encoder count of left/right mismatch
+#define SYNC_MAX                 40    // Largest PWM correction the sync loop may apply
 
 
 
@@ -223,7 +225,8 @@ class MotionLogic
     int counterStopped;
 
     int pwmLoopI;
-    int pwmLoopP; 
+    int pwmLoopP;
+    int pwmTrim;       // correction from the wheel-sync loop (keeps both wheels matched)
 
     int debugPrint;
 
@@ -240,7 +243,7 @@ class MotionLogic
 
     int speedAtDecel;
 
-    long countEncoder;
+    volatile long countEncoder;   // incremented in the encoder interrupt
     long countEncoderLast;
 
     inline int getOutputPWM() { return outputPWM; };
@@ -248,6 +251,17 @@ class MotionLogic
     inline int getOutputRev() { return outputRev; };
 
     inline void incrEncoder() { countEncoder++; };
+
+    // Read the 32-bit count atomically. The interrupt can fire mid-read on an 8-bit AVR,
+    // which would otherwise return a corrupted value.
+    long getCount() {
+      noInterrupts();
+      long c = countEncoder;
+      interrupts();
+      return c;
+    }
+
+    inline void setTrim(int trim) { pwmTrim = trim; };
 
     inline void debugOn() { debugPrint = 1; };   // used this function to turn on debug print statements
                                                  // recommended to only turn on debug for left or right motor.  NOT both.
@@ -260,6 +274,9 @@ class MotionLogic
 
       countEncoder = 0;
       countEncoderLast = 0;
+      pwmLoopI = 0;
+      pwmLoopP = 0;
+      pwmTrim = 0;
 
       debugPrint = 0;
 
@@ -334,9 +351,12 @@ class MotionLogic
       timeDecel = timeAtSpeed + tAtSpeed * 1000000;
 
 
-      pwmLoopI = 0.2; //orig 0
-      pwmLoopP = 1.0; //orig 0
+      pwmLoopI = 0;      // integrator starts empty for every move
+      pwmLoopP = 0;
+      pwmTrim = 0;
+      noInterrupts();
       countEncoder = 0;
+      interrupts();
       countEncoderLast = 0;
       posProfile = 0;
       speedAtDecel = -10000;
@@ -362,11 +382,13 @@ class MotionLogic
     void updateMotion(long usecElapsed) {
       int flagUpdate = 0;
 
+      long count = getCount();
+
       timerUpdate += usecElapsed;
       if (timerUpdate >= 30000) {
-        long delta = countEncoder - countEncoderLast;
+        long delta = count - countEncoderLast;
         speedActual = delta * 1000000L / timerUpdate;
-        countEncoderLast = countEncoder;
+        countEncoderLast = count;
         timerUpdate = 0;
         flagUpdate = 1;
         if (running == 0 && speedActual < 4) {
@@ -384,13 +406,13 @@ class MotionLogic
         return;
       }
 
-      if (countEncoder >= (position - 2)) {
+      if (count >= (position - 2)) {
         if (debugPrint) { 
           Serial.print("STOPPED,");
           Serial.print("timeRunning:");
           Serial.print(timeRunning);
           Serial.print(",encoder:");
-          Serial.print(countEncoder);
+          Serial.print(count);
           Serial.print(",speedActual:");
           Serial.print(speedActual);
           Serial.print(",pwm:");
@@ -423,16 +445,25 @@ class MotionLogic
       posProfile += (speedProfile * (timeRunning - timeRunningLast)) / 1000000;
       timeRunningLast = timeRunning;
 
-      long perror = posProfile - countEncoder;
+      long perror = posProfile - count;
       int serror = speedProfile - speedActual;
     
           // This program uses a PI loop to control speed
           // This loop is NOT tuned.  Meaning testing is required to tune the loop
           // which will provide the best preformance
-      pwmLoopI += serror / 4; // Ki orig: 4
-      pwmLoopP = serror / 2;  // Kp orig: 2
-        
-      outputPWM = pwmLoopP + pwmLoopI;
+      pwmLoopP = serror / 2;                  // Kp = 1/2
+      int iCandidate = pwmLoopI + serror / 4; // Ki = 1/4
+      int outCandidate = pwmLoopP + iCandidate + pwmTrim;
+
+      // Anti-windup: stop integrating while the output is pinned at a limit and the
+      // error would push it further past that limit. Otherwise the integrator keeps
+      // growing during saturation and the wheel overshoots once it catches up.
+      bool pushingHigh = (outCandidate > 254 && serror > 0);
+      bool pushingLow  = (outCandidate < 0   && serror < 0);
+      if (!pushingHigh && !pushingLow) pwmLoopI = iCandidate;
+      pwmLoopI = constrain(pwmLoopI, -254, 254);
+
+      outputPWM = pwmLoopP + pwmLoopI + pwmTrim;
       if (outputPWM < 0) outputPWM = 0;
       if (outputPWM > 254) outputPWM = 254;
 
@@ -440,7 +471,7 @@ class MotionLogic
         Serial.print("timeRunning:");
         Serial.print(timeRunning);
         Serial.print(",encoder:");
-        Serial.print(countEncoder);
+        Serial.print(count);
         Serial.print(",speedProfile:");
         Serial.print(speedProfile);
         Serial.print(",speedActual:");
@@ -477,6 +508,18 @@ void encoderIntRight()  {
   mtrRight.incrEncoder();
 }
 
+
+//---------------------------------------------------------------------------------------
+// Wheel sync: during a move both wheels should have turned the same number of counts.
+// If one wheel gets ahead, slow it down and speed the other up in proportion to the gap.
+// This keeps straight runs straight and turns symmetric, instead of each wheel only
+// tracking its own speed.
+void syncWheels() {
+  long diff = mtrLeft.getCount() - mtrRight.getCount();   // + means left is ahead
+  int trim = constrain(diff * SYNC_GAIN, -SYNC_MAX, SYNC_MAX);
+  mtrLeft.setTrim(-trim);
+  mtrRight.setTrim(trim);
+}
 
 //---------------------------------------------------------------------------------------
 void setMotorOutputs() {
@@ -647,6 +690,8 @@ void loop() {
         setMotorOutputs();
       }
       
+      syncWheels();
+
       if (mtrLeft.isStopped() && mtrRight.isStopped()) {
         setMotorOutputs();
         cmdQueue.next();
@@ -660,6 +705,8 @@ void loop() {
         mtrRight.startMove(distance,speed);
         setMotorOutputs();
       }
+
+      syncWheels();
 
       if (mtrLeft.isStopped() && mtrRight.isStopped()) {
         setMotorOutputs();
@@ -675,6 +722,8 @@ void loop() {
         mtrRight.startMove(distance,speed * -1);
         setMotorOutputs();
       }
+
+      syncWheels();
 
       if (mtrLeft.isStopped() && mtrRight.isStopped()) {
         setMotorOutputs();
