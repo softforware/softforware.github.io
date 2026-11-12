@@ -16,8 +16,22 @@ void setup() {
   Serial.begin(9600);
 }
 
+// ADC counts near either rail mean the amplifier has clipped
+const int ADC_LOW_LIMIT  = 2;     // ~10 mV: cell is below the 0.91 V reference
+const int ADC_HIGH_LIMIT = 1021;  // ~4.99 V: amplifier output is saturated
+
+void setLeds(bool red, bool green, bool blue) {
+  digitalWrite(7, red ? HIGH : LOW);
+  digitalWrite(6, green ? HIGH : LOW);
+  digitalWrite(5, blue ? HIGH : LOW);
+}
+
 void loop() {
-  float V_in = analogRead(A8) * 5.0 / 1023;
+  static bool blinkOn = false;
+  blinkOn = !blinkOn;  // toggles every loop, used for out-of-range blinking
+
+  int raw = analogRead(A8);
+  float V_in = raw * 5.0 / 1023;
 
   float V = V_in / gain + V0;  // cell voltage before amplification
 
@@ -31,24 +45,29 @@ void loop() {
   Serial.print(V, 3);
   Serial.println(" V");
 
-  Serial.print("Concentration = ");
-  Serial.print(ppm, 0);
-  Serial.println(" ppm");
+  if (raw <= ADC_LOW_LIMIT) {
+    // Amplifier output is pinned at 0 V, so the real value is unknown and lower
+    Serial.println("Concentration = BELOW RANGE");
+    setLeds(false, false, blinkOn);           // blink blue
+  } else if (raw >= ADC_HIGH_LIMIT || ppm > 10000) {
+    // Amplifier saturated, or above the highest calibrated range
+    Serial.println("Concentration = ABOVE RANGE");
+    setLeds(blinkOn, false, false);           // blink red
+  } else {
+    Serial.print("Concentration = ");
+    Serial.print(ppm, 0);
+    Serial.println(" ppm");
+
+    // Ranges share their boundaries so every value lights exactly one LED
+    if (ppm < 1500) {
+      setLeds(false, false, true);            // blue:  below 1500 ppm
+    } else if (ppm < 3500) {
+      setLeds(false, true, false);            // green: 1500 to 3500 ppm
+    } else {
+      setLeds(true, false, false);            // red:   3500 to 10000 ppm
+    }
+  }
   Serial.println();
-
-  digitalWrite(7, LOW);
-  digitalWrite(6, LOW);
-  digitalWrite(5, LOW);
-
-  if (-50 < ppm && ppm < 1500) {
-    digitalWrite(5, HIGH);  // blue LED
-  }
-  if (1500 < ppm && ppm < 3500) {
-    digitalWrite(6, HIGH);  // green LED
-  }
-  if (3500 < ppm && ppm < 10000) {
-    digitalWrite(7, HIGH);  // red LED
-  }
 
   delay(500);  // read every 0.5 seconds
 }

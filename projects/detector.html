@@ -81,7 +81,10 @@
         about 85 mV of cell voltage per tenfold change in concentration, and a measurable range of roughly
         340 to 13,000 ppm.</li>
       <li><strong>Show the range:</strong> blue below 1,500 ppm, green from 1,500 to 3,500 ppm, and red from 3,500
-        to 10,000 ppm, updated twice a second and printed over serial.</li>
+        to 10,000 ppm, updated twice a second and printed over serial. Exactly one LED is lit for any valid reading.</li>
+      <li><strong>Flag readings it can't trust:</strong> if the amplifier output is pinned at 0 V (the cell is below
+        the reference) the blue LED blinks and serial prints BELOW RANGE. If the output saturates or the reading
+        exceeds 10,000 ppm, the red LED blinks. A clipped reading never shows up as a normal-looking number.</li>
     </ol>
     <pre class="mono"><code>float V = V_in / gain + V0;          // undo the x37 amplifier and 0.91 V offset
 double ppm = a * exp(b * V);         // exponential calibration fit</code></pre>
