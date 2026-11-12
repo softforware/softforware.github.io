@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Salinity Detector | Ananya Gupta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">AG<span class="accent">_</span></a>
+      <nav>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../coursework.html">Coursework</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container article">
+    <a class="back-link mono" href="../index.html#projects">← All projects</a>
+
+    <p class="mono card-meta">2023–24 season · Science Olympiad · Detector Building</p>
+    <h1>Salinity Detector</h1>
+    <p class="lead">
+      A portable device that measures the concentration of an unknown salt (NaCl) solution, using an
+      electrochemical cell, an op-amp, and an Arduino that converts voltage to concentration from a
+      calibration curve.
+    </p>
+    <ul class="tags" style="margin-top:16px"><li>Arduino Mega</li><li>Op-amp</li><li>Sensor calibration</li><li>Electrochemistry</li><li>Breadboarding</li><li>3D printing</li></ul>
+
+    <figure>
+      <img src="../images/detector-card.jpg" alt="The detector: Arduino and breadboard circuit on a battery pack, wired to an electrode stand over a cup of test solution" />
+      <figcaption>The portable build: the circuit and battery on the left, and the electrode stand over a cup of test solution.</figcaption>
+    </figure>
+
+    <h2>How it works</h2>
+    <ul>
+      <li><strong>The sensor is a battery.</strong> A copper wire sits in copper sulfate inside a sealed test tube,
+        and a zinc plate sits in the unknown NaCl solution. A string soaked in potassium nitrate, run through a
+        straw, acts as the salt bridge between the two. Together they form a galvanic cell whose voltage depends
+        on the solution it's dipped in.</li>
+      <li><strong>Amplifying the signal.</strong> The voltage changed very little from one NaCl concentration to
+        the next, too little for the Arduino to tell apart. An op-amp circuit amplifies it so differences between
+        concentrations become measurable.</li>
+      <li><strong>Voltage to concentration.</strong> An Arduino reads the amplified voltage on an analog pin and
+        converts it to a concentration using a calibration curve built from known solutions.</li>
+    </ul>
+
+    <h2>Calibration</h2>
+    <p>
+      The device is only as accurate as its calibration. We measured the cell voltage with a multimeter across a
+      set of solutions with known concentrations of NaCl and copper sulfate, and used those points to build the
+      curve the code looks up. Because a cell like this drifts with temperature and electrode condition, we
+      re-calibrated on competition day before testing unknowns.
+    </p>
+    <div class="img-row">
+      <figure>
+        <img src="../images/detector-calibration.jpg" alt="Lab bench with a multimeter, beakers of copper sulfate and saline, and electrodes" />
+        <figcaption>Recording voltages across known concentrations to build the calibration curve.</figcaption>
+      </figure>
+      <figure>
+        <img src="../images/detector-compday.jpg" alt="Calibrating the detector on a laptop on competition day" />
+        <figcaption>Re-calibrating on competition day.</figcaption>
+      </figure>
+    </div>
+
+    <h2>Iterations</h2>
+    <div class="img-row">
+      <figure>
+        <img src="../images/detector-v1.jpg" alt="First iteration: breadboard with an op-amp chip and potentiometers wired to an Arduino Mega, with electrodes in a beaker" />
+        <figcaption>First iteration: the op-amp circuit on a breadboard with an Arduino Mega, and the electrodes in open containers.</figcaption>
+      </figure>
+      <figure>
+        <img src="../images/detector-final.jpg" alt="Final electrode stand: a 3D-printed base holding the sealed copper sulfate tube, the salt-bridge straw, and the zinc electrode" />
+        <figcaption>Final electrode stand: a 3D-printed base holds the sealed copper sulfate tube, the salt-bridge straw, and the zinc plate.</figcaption>
+      </figure>
+    </div>
+    <p>
+      The first version was spread across a bench. We then packaged it into a portable device, starting with a
+      cardboard stand and ending with a 3D-printed one that holds the electrodes and salt bridge in a fixed
+      position over the test cup. Fixed geometry matters here, since moving the electrodes changes the reading.
+    </p>
+
+    <h2>Presenting it</h2>
+    <figure>
+      <img src="../images/detector-sciencefair.jpg" alt="Ananya presenting the detector and display board at a STEM showcase" />
+      <figcaption>Presenting the detector at a STEM showcase.</figcaption>
+    </figure>
+
+    <!-- ADD: competition result, accuracy on unknowns, op-amp gain, and what the LEDs indicate -->
+  </main>
+
+  <footer class="container footer mono">
+    <p>© 2026 Ananya Gupta</p>
+  </footer>
+</body>
+</html>

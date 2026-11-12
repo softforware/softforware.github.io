@@ -237,3 +237,8 @@ p + p { margin-top: 16px; }
   .headshot { max-width: 260px; }
   .img-row { grid-template-columns: 1fr; }
 }
+
+/* ---------- Earlier projects (image + text row) ---------- */
+.sw-item-img { grid-template-columns: 220px 1fr; align-items: start; gap: 20px; }
+.sw-item-img img { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 8px; border: 1px solid var(--border); }
+@media (max-width: 720px) { .sw-item-img { grid-template-columns: 1fr; } }
