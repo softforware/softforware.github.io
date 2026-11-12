@@ -53,6 +53,27 @@
         for the concentration range.</li>
     </ul>
 
+    <h2>The chemistry</h2>
+    <p>The sensor is a zinc–copper galvanic cell, the same pairing as a classic Daniell cell:</p>
+    <ul>
+      <li><strong>Anode, zinc in the NaCl sample (oxidation):</strong> Zn → Zn<sup>2+</sup> + 2e<sup>−</sup>.
+        Zinc gives up electrons, so it's the reducing agent.</li>
+      <li><strong>Cathode, copper in copper sulfate (reduction):</strong> Cu<sup>2+</sup> + 2e<sup>−</sup> → Cu.
+        Copper ions take those electrons, so Cu<sup>2+</sup> is the oxidizing agent.</li>
+      <li><strong>Overall:</strong> Zn + Cu<sup>2+</sup> → Zn<sup>2+</sup> + Cu. Zinc reduces the copper ions,
+        with a standard cell voltage of about 1.10 V.</li>
+      <li><strong>Salt bridge:</strong> the KNO<sub>3</sub>-soaked string lets ions move between the two sides
+        (NO<sub>3</sub><sup>−</sup> toward the zinc, K<sup>+</sup> toward the copper) to keep both solutions
+        neutral without mixing them.</li>
+    </ul>
+    <p>
+      Na<sup>+</sup> and Cl<sup>−</sup> aren't oxidized or reduced themselves. The salt changes the zinc side's
+      conductivity and how readily the zinc surface corrodes, which shifts the zinc electrode's potential and
+      therefore the cell voltage: higher salt concentration gives a slightly higher voltage. That relationship
+      is real but hard to predict from first principles, which is why the device relies on an experimental
+      calibration curve.
+    </p>
+
     <h2>Calibration</h2>
     <p>
       The device is only as accurate as its calibration. We measured the cell voltage with a multimeter across a
