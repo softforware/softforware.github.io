@@ -31,7 +31,7 @@
       electrochemical cell, an op-amp, and an Arduino that converts voltage to concentration from a
       calibration curve.
     </p>
-    <ul class="tags" style="margin-top:16px"><li>Arduino Mega</li><li>Op-amp</li><li>Sensor calibration</li><li>Electrochemistry</li><li>Breadboarding</li><li>3D printing</li></ul>
+    <ul class="tags" style="margin-top:16px"><li>Arduino Mega</li><li>C++</li><li>Op-amp</li><li>ADC</li><li>Sensor calibration</li><li>Electrochemistry</li><li>3D printing</li></ul>
 
     <figure>
       <img src="../images/detector-card.jpg" alt="The detector: Arduino and breadboard circuit on a battery pack, wired to an electrode stand over a cup of test solution" />
@@ -44,11 +44,13 @@
         and a zinc plate sits in the unknown NaCl solution. A string soaked in potassium nitrate, run through a
         straw, acts as the salt bridge between the two. Together they form a galvanic cell whose voltage depends
         on the solution it's dipped in.</li>
-      <li><strong>Amplifying the signal.</strong> The voltage changed very little from one NaCl concentration to
-        the next, too little for the Arduino to tell apart. An op-amp circuit amplifies it so differences between
-        concentrations become measurable.</li>
-      <li><strong>Voltage to concentration.</strong> An Arduino reads the amplified voltage on an analog pin and
-        converts it to a concentration using a calibration curve built from known solutions.</li>
+      <li><strong>Amplifying the signal.</strong> The cell sits near 0.9–1.05 V and changes by only a few
+        millivolts between concentrations, finer than the Arduino's 4.9 mV ADC step. So the op-amp circuit
+        subtracts a 0.91 V reference and amplifies only the difference, by ×37. That stretches the cell's
+        useful range, about 0.91–1.045 V, across the ADC's full 0–5 V input.</li>
+      <li><strong>Voltage to concentration.</strong> An Arduino Mega reads the amplified voltage on an analog pin and
+        converts it to a concentration using a calibration curve built from known solutions, then lights an LED
+        for the concentration range.</li>
     </ul>
 
     <h2>Calibration</h2>
@@ -68,6 +70,29 @@
         <figcaption>Re-calibrating on competition day.</figcaption>
       </figure>
     </div>
+
+    <h2>Firmware</h2>
+    <p>The Arduino code works backwards from the ADC reading to a concentration:</p>
+    <ol>
+      <li><strong>Undo the amplifier:</strong> V<sub>cell</sub> = V<sub>ADC</sub> / 37 + 0.91 V. Each ADC step
+        corresponds to about 0.13 mV at the cell.</li>
+      <li><strong>Apply the calibration fit:</strong> concentration (ppm) = a·e<sup>b·V</sup>, an exponential fit
+        to our calibration measurements (a = 6.29×10<sup>−9</sup>, b = 27.16 V<sup>−1</sup>). That works out to
+        about 85 mV of cell voltage per tenfold change in concentration, and a measurable range of roughly
+        340 to 13,000 ppm.</li>
+      <li><strong>Show the range:</strong> blue below 1,500 ppm, green from 1,500 to 3,500 ppm, and red from 3,500
+        to 10,000 ppm, updated twice a second and printed over serial.</li>
+    </ol>
+    <pre class="mono"><code>float V = V_in / gain + V0;          // undo the x37 amplifier and 0.91 V offset
+double ppm = a * exp(b * V);         // exponential calibration fit</code></pre>
+    <p>
+      A separate calibration sketch measures the amplifier's real gain by reading its output and both of its
+      inputs, which is where the ×37 comes from, rather than trusting nominal resistor values.
+    </p>
+    <p class="mono">
+      <a href="../code/salinity-detector/salinity_detector.ino" target="_blank">salinity_detector.ino</a> ·
+      <a href="../code/salinity-detector/gain_calibration.ino" target="_blank">gain_calibration.ino</a>
+    </p>
 
     <h2>Iterations</h2>
     <div class="img-row">
@@ -92,7 +117,7 @@
       <figcaption>Presenting the detector at a STEM showcase.</figcaption>
     </figure>
 
-    <!-- ADD: competition result, accuracy on unknowns, op-amp gain, and what the LEDs indicate -->
+    <!-- ADD: competition result and accuracy on unknowns -->
   </main>
 
   <footer class="container footer mono">
