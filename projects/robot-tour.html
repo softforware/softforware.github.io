@@ -30,7 +30,7 @@
       An autonomous robot that drives a track we only see when the competition timer starts. Within 10 minutes
       we had to program the route, place the robot, and let it run, with three attempts to get it right.
     </p>
-    <ul class="tags" style="margin-top:16px"><li>Arduino</li><li>C++</li><li>DC motors + encoders</li><li>PI speed control</li><li>Interrupts</li><li>Stepper motors</li></ul>
+    <ul class="tags" style="margin-top:16px"><li>Arduino</li><li>C++</li><li>DC motors + encoders</li><li>PI speed control</li><li>Interrupts</li><li>Stepper motors</li><li>Open-loop timing</li></ul>
 
     <figure>
       <img src="../images/robottour-run.jpg" alt="Ananya placing the robot on the competition floor before a run" />
@@ -56,10 +56,20 @@
       </figure>
     </div>
     <p>
-      Steppers move a fixed angle per step, so distance is just a step count, which made them a natural first
-      choice. In practice we needed more accuracy than they gave us, so we switched to DC motors with encoders,
-      which measure how far each wheel has actually turned.
+      The first robot's code is fully open-loop: each move runs the motors for a calibrated amount of time.
+      Driving forward takes 85 ms per centimeter, and turns are a fraction of a measured 2.15-second full
+      rotation, with a separate correction factor for each direction because the two sides didn't turn at quite
+      the same speed. The route is hard-coded and runs once at power-up.
     </p>
+    <pre class="mono"><code>void forward(float distance) {        // distance in cm
+  double x = distance * (850 / 10.0);  // 85 ms per cm, calibrated on the track
+  ...</code></pre>
+    <p>
+      Timing works until conditions change: as the battery drains, the motors slow down and the same delay
+      covers less distance. To get repeatable accuracy, we switched to DC motors with encoders, which measure how
+      far each wheel has actually turned instead of assuming it.
+    </p>
+    <p class="mono"><a href="../code/robot-tour/robot_tour_v1_timed.ino" target="_blank">robot_tour_v1_timed.ino</a></p>
 
     <h2>Robot 2: DC motors with encoders</h2>
     <p>The second robot's firmware closes the loop on wheel motion:</p>
