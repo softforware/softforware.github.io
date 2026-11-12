@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Robot Tour | Ananya Gupta</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="../style.css" />
+</head>
+<body>
+  <header class="nav">
+    <div class="container nav-inner">
+      <a href="../index.html" class="logo">AG<span class="accent">_</span></a>
+      <nav>
+        <a href="../index.html#projects">Projects</a>
+        <a href="../coursework.html">Coursework</a>
+        <a href="../index.html#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container article">
+    <a class="back-link mono" href="../index.html#projects">← All projects</a>
+
+    <p class="mono card-meta">2023–24 season · Science Olympiad · Robot Tour</p>
+    <h1>Robot Tour</h1>
+    <p class="lead">
+      An autonomous robot that drives a track we only see when the competition timer starts. Within 10 minutes
+      we had to program the route, place the robot, and let it run, with three attempts to get it right.
+    </p>
+    <ul class="tags" style="margin-top:16px"><li>Arduino</li><li>C++</li><li>DC motors + encoders</li><li>PI speed control</li><li>Interrupts</li><li>Stepper motors</li></ul>
+
+    <figure>
+      <img src="../images/robottour-run.jpg" alt="Ananya placing the robot on the competition floor before a run" />
+      <figcaption>Starting a run on competition day.</figcaption>
+    </figure>
+
+    <h2>The challenge</h2>
+    <p>
+      The track layout, a grid with wooden barriers, is revealed only when the clock starts. That rules out
+      anything tuned to a specific course: the robot has to be reprogrammed on the spot, so it needs to turn a
+      simple list of moves into accurate distances and turns, every time.
+    </p>
+
+    <h2>Robot 1: stepper motors</h2>
+    <div class="img-row">
+      <figure>
+        <img src="../images/robottour-stepper.jpg" alt="First robot: Arduino with a motor shield driving two stepper motors, orange wheels and a wooden dowel marker" />
+        <figcaption>The first robot: two stepper motors on an Arduino motor shield.</figcaption>
+      </figure>
+      <figure>
+        <img src="../images/robottour-track.jpg" alt="Practice track of wooden barriers on a checkered tile floor, with the robot at the start" />
+        <figcaption>A practice track built from wooden barriers.</figcaption>
+      </figure>
+    </div>
+    <p>
+      Steppers move a fixed angle per step, so distance is just a step count, which made them a natural first
+      choice. In practice we needed more accuracy than they gave us, so we switched to DC motors with encoders,
+      which measure how far each wheel has actually turned.
+    </p>
+
+    <h2>Robot 2: DC motors with encoders</h2>
+    <p>The second robot's firmware closes the loop on wheel motion:</p>
+    <ul>
+      <li><strong>Route as a command list:</strong> the course is entered as a short list of commands
+        (<span class="mono">FORWARD 250</span>, <span class="mono">TURN_LEFT</span>, and so on), which is quick to
+        write in the 10-minute window. A start button begins the run, and pressing it again aborts.</li>
+      <li><strong>Encoder counting with interrupts:</strong> each wheel's encoder triggers a hardware interrupt on
+        every pulse, so no counts are missed while the main loop runs. With 540 pulses per wheel revolution and
+        184 mm of travel per revolution, each pulse is about 0.34 mm.</li>
+      <li><strong>Smooth motion profile:</strong> each move ramps up, cruises, and ramps down at a set
+        acceleration, so the wheels don't slip at the start or overshoot at the end.</li>
+      <li><strong>PI speed control:</strong> every 30 ms, the code compares each wheel's measured speed to the
+        profile and adjusts its PWM with a proportional-integral loop, then stops the wheel at the target count.</li>
+      <li><strong>Calibrated turns:</strong> a 90° turn is a fixed encoder count (425 pulses), measured on the
+        robot, with the wheels driven in opposite directions.</li>
+    </ul>
+    <pre class="mono"><code>// mm to encoder counts for a forward move
+distance = mm * ENCODER_COUNTS_PER_REV / MM_PER_REV;   // 540 counts / 184 mm</code></pre>
+    <p class="mono"><a href="../code/robot-tour/robot_tour_encoders.ino" target="_blank">robot_tour_encoders.ino</a></p>
+
+    <h2>Competition</h2>
+    <figure>
+      <img src="../images/robottour-fair.jpg" alt="Ananya with the encoder robot and a Robot Tour display board" />
+      <figcaption>Showing the encoder robot and our display board.</figcaption>
+    </figure>
+
+    <!-- ADD: competition result / placement, and run time or accuracy if you have it -->
+  </main>
+
+  <footer class="container footer mono">
+    <p>© 2026 Ananya Gupta</p>
+  </footer>
+</body>
+</html>
